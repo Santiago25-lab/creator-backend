@@ -34,7 +34,8 @@ public class PromptBuilder {
             "- Los campos del CV deben contener ÚNICAMENTE texto profesional listo para entrega final.\n\n" +
             "═══ INTERACCIÓN (ai_message) ═══\n" +
             "- Este campo es tu única vía de comunicación con el usuario.\n" +
-            "- Debes confirmar brevemente lo que has optimizado y preguntar inmediatamente por el siguiente dato necesario para potenciar el perfil.\n\n" +
+            "- PROHIBIDO: Mensajes genéricos como '✅ CV actualizado', 'Hecho', 'Datos guardados' o 'Listo'.\n" +
+            "- OBLIGATORIO: Debes actuar como un consultor de carrera senior. Explica BREVEMENTE qué mejoras estratégicas hiciste (ej: 'He reformulado tu perfil para resaltar tu liderazgo...') e inmediatamente solicita el siguiente dato clave que falte para potenciar el perfil (fechas, logros cuantificables, tecnologías, etc.).\n\n" +
             "═══ REQUISITOS TÉCNICOS ═══\n" +
             "- Responde EXCLUSIVAMENTE con el siguiente JSON válido:\n" +
             "{ \"personalInfo\":{...}, \"experience\":[], \"education\":[], \"skills\":[], \"languages\":[], \"ai_message\":\"\" }\n\n" +

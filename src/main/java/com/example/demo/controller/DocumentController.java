@@ -47,7 +47,12 @@ public class DocumentController {
     @PostMapping("/upload")
     public ResponseEntity<?> uploadDocument(
             @RequestParam("file") MultipartFile file,
+            @RequestParam("userId") String userId,
             @RequestParam(value = "description", required = false) String description) {
+
+        if (userId == null || userId.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El userId es obligatorio."));
+        }
 
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
@@ -76,6 +81,7 @@ public class DocumentController {
             doc.setContentType(contentType);
             doc.setFileSize(file.getSize());
             doc.setDescription(description);
+            doc.setUserId(userId);
             Document saved = documentRepository.save(doc);
 
             return ResponseEntity.ok(toMap(saved));
@@ -87,19 +93,27 @@ public class DocumentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Map<String, Object>>> listDocuments() {
-        List<Document> docs = documentRepository.findAll();
+    public ResponseEntity<List<Map<String, Object>>> listDocuments(@RequestParam("userId") String userId) {
+        if (userId == null || userId.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<Document> docs = documentRepository.findByUserId(userId);
         List<Map<String, Object>> result = new ArrayList<>();
         for (Document d : docs) result.add(toMap(d));
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{id}/view")
-    public ResponseEntity<Resource> viewDocument(@PathVariable Long id) {
+    public ResponseEntity<Resource> viewDocument(@PathVariable Long id, @RequestParam("userId") String userId) {
         Optional<Document> opt = documentRepository.findById(id);
         if (opt.isEmpty()) return ResponseEntity.notFound().build();
 
         Document doc = opt.get();
+        // Verificar propiedad
+        if (!doc.getUserId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Path filePath = UPLOAD_DIR.resolve(doc.getStoredName());
 
         try {
@@ -118,11 +132,16 @@ public class DocumentController {
     }
 
     @PostMapping("/{id}/analyze")
-    public ResponseEntity<?> analyzeDocument(@PathVariable Long id) {
+    public ResponseEntity<?> analyzeDocument(@PathVariable Long id, @RequestParam("userId") String userId) {
         Optional<Document> opt = documentRepository.findById(id);
         if (opt.isEmpty()) return ResponseEntity.notFound().build();
 
         Document doc = opt.get();
+        // Verificar propiedad
+        if (!doc.getUserId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Path filePath = UPLOAD_DIR.resolve(doc.getStoredName());
 
         try {
@@ -163,11 +182,16 @@ public class DocumentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteDocument(@PathVariable Long id) {
+    public ResponseEntity<?> deleteDocument(@PathVariable Long id, @RequestParam("userId") String userId) {
         Optional<Document> opt = documentRepository.findById(id);
         if (opt.isEmpty()) return ResponseEntity.notFound().build();
 
         Document doc = opt.get();
+        // Verificar propiedad
+        if (!doc.getUserId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Path filePath = UPLOAD_DIR.resolve(doc.getStoredName());
         try { Files.deleteIfExists(filePath); } catch (IOException e) {}
 

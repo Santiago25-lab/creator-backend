@@ -30,10 +30,24 @@ public class CVAIController {
 
         String currentStateStr = (currentState != null) ? currentState.toString() : "{}";
         String systemInstruction = promptBuilder.buildCVGenerationSystemInstruction(currentStateStr);
-        String finalPrompt = systemInstruction + "\n\nMENSAJE DEL USUARIO: " + userPrompt;
+        
+        StringBuilder promptWithHistory = new StringBuilder(systemInstruction);
+        promptWithHistory.append("\n\n═══ HISTORIAL DE CONVERSACIÓN ═══\n");
+        
+        if (request.getHistory() != null) {
+            for (Map<String, String> msg : request.getHistory()) {
+                String role = msg.get("role");
+                String content = msg.get("content");
+                if (role != null && content != null) {
+                    promptWithHistory.append(role.toUpperCase()).append(": ").append(content).append("\n");
+                }
+            }
+        }
+
+        promptWithHistory.append("\nÚLTIMO MENSAJE DEL USUARIO (A RESPONDER): ").append(userPrompt);
 
         try {
-            String result = aiService.callOpenRouter(finalPrompt);
+            String result = aiService.callOpenRouter(promptWithHistory.toString());
             return ResponseEntity.ok(result);
         } catch (RuntimeException e) {
             if ("RATE_LIMIT_EXCEEDED".equals(e.getMessage())) {

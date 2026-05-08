@@ -25,7 +25,13 @@ public class Document {
     private String description;        // Descripción opcional del documento
 
     @Column(nullable = false)
+    private String userId;             // ID del usuario de Supabase Auth
+
+    @Column(nullable = false)
     private LocalDateTime uploadedAt;
+
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
     @PrePersist
     public void prePersist() {
