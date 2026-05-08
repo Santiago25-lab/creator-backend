@@ -24,7 +24,7 @@ public class Document {
 
     private String description;        // Descripción opcional del documento
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String userId;             // ID del usuario de Supabase Auth
 
     @Column(nullable = false)
