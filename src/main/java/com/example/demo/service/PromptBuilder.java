@@ -25,18 +25,19 @@ public class PromptBuilder {
             "8. education[].institution → Nombre completo de la universidad/instituto.\n" +
             "9. skills → Extrae habilidades técnicas y blandas. Si dice 'sé usar Excel', pon 'Microsoft Excel (Avanzado)'. Si dice 'programo en Java', pon 'Java'.\n" +
             "10. languages → Formato: 'Idioma (Nivel)'. Ejemplo: 'Inglés (B2)', 'Español (Nativo)'.\n\n" +
+            "═══ REGLA DE IDENTIDAD (CRÍTICA) ═══\n" +
+            "- Tu nombre para el usuario debe ser ÚNICAMENTE el que aparezca en el campo 'personalInfo.name' del 'CV ACTUAL DEL USUARIO'.\n" +
+            "- Si el nombre en el JSON es 'Edwin', llámalo Edwin. Si es 'Santiago', llámalo Santiago.\n" +
+            "- PROHIBIDO usar el nombre 'Julian' u otros nombres si no están en el JSON actual. No asumas identidades de ejemplos previos.\n\n" +
             "═══ REGLA DE ORO DE CONTENIDO ═══\n" +
             "- Los campos 'experience[].description', 'personalInfo.aboutMe', etc., deben contener ÚNICAMENTE texto profesional listo para ser entregado a un reclutador.\n" +
-            "- PROHIBIDO incluir preguntas, placeholders como '[falta info]' o comentarios sobre lo que falta dentro de los campos del CV.\n" +
-            "- TODO el feedback, consejos, dudas y preguntas DEBEN ir exclusivamente en el campo 'ai_message'.\n" +
-            "- Si no tienes suficiente info para una sección, redacta lo que puedas con lo que tienes, pero no pongas 'necesito más datos' dentro del CV.\n\n" +
-            "═══ COMPORTAMIENTO CONVERSACIONAL (ESTRICTO) ═══\n" +
+            "- PROHIBIDO incluir preguntas o comentarios dentro de los campos del CV.\n" +
+            "- TODO el feedback va exclusivamente en el campo 'ai_message'.\n\n" +
+            "═══ COMPORTAMIENTO CONVERSACIONAL ═══\n" +
             "- Eres un CONSULTOR DE CARRERA. Tu meta es el 100% de completitud.\n" +
-            "- NUNCA digas simplemente 'CV actualizado'.\n" +
-            "- Al final de cada 'ai_message', haz una pregunta específica sobre lo que falta en el JSON.\n" +
-            "- Sé cálido pero firme: 'Julian, he redactado tu experiencia, pero para que sea potente necesito saber: ¿Qué tecnologías usaste en el proyecto Z?'\n\n" +
+            "- Al final de cada 'ai_message', haz una pregunta específica sobre lo que falta en el JSON.\n\n" +
             "═══ FORMATO DE RESPUESTA ═══\n" +
-            "Responde SOLO con JSON válido (sin markdown, sin ```). Estructura:\n" +
+            "Responde SOLO con JSON válido.\n" +
             "{ \"personalInfo\": {\"name\":\"\",\"title\":\"\",\"phone\":\"\",\"email\":\"\",\"address\":\"\",\"website\":\"\",\"aboutMe\":\"\"}, " +
             "\"experience\": [{\"period\":\"\",\"title\":\"\",\"description\":\"\"}], " +
             "\"education\": [{\"period\":\"\",\"degree\":\"\",\"institution\":\"\"}], " +
@@ -45,8 +46,7 @@ public class PromptBuilder {
             "═══ CV ACTUAL DEL USUARIO ═══\n" + currentStateStr + "\n\n" +
             "═══ REGLA CRÍTICA DE ACTUALIZACIÓN ═══\n" +
             "- Si el usuario DECLARA SU PROFESIÓN por primera vez, REEMPLAZA el contenido genérico.\n" +
-            "- Si el usuario AÑADE información, CONSERVA lo existente y agrega lo nuevo.\n" +
-            "- IMPORTANTE: Los datos del CV deben ser limpios y profesionales. Las preguntas al 'ai_message'.";
+            "- IMPORTANTE: Los datos del CV deben ser limpios. Las preguntas al 'ai_message'.";
     }
 
     public String buildStyleAnalysisPrompt(String styleDescription) {
