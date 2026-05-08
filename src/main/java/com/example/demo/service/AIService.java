@@ -12,8 +12,15 @@ public class AIService {
     @Value("${gemini.api.key:YOUR_API_KEY}")
     private String geminiApiKey;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private static final String OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+
+    public AIService() {
+        org.springframework.http.client.SimpleClientHttpRequestFactory factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(60000);
+        factory.setReadTimeout(60000);
+        this.restTemplate = new RestTemplate(factory);
+    }
 
     public String callOpenRouter(String textPrompt) {
         return callOpenRouter(textPrompt, null, null);
@@ -52,7 +59,7 @@ public class AIService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + geminiApiKey);
-        headers.set("HTTP-Referer", "http://localhost:5173");
+        headers.set("HTTP-Referer", "https://creator-frontend-mu.vercel.app");
         headers.set("X-Title", "CreatorCV");
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
