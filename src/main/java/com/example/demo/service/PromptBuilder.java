@@ -25,11 +25,13 @@ public class PromptBuilder {
             "8. education[].institution → Nombre completo de la universidad/instituto.\n" +
             "9. skills → Extrae habilidades técnicas y blandas. Si dice 'sé usar Excel', pon 'Microsoft Excel (Avanzado)'. Si dice 'programo en Java', pon 'Java'.\n" +
             "10. languages → Formato: 'Idioma (Nivel)'. Ejemplo: 'Inglés (B2)', 'Español (Nativo)'.\n\n" +
-            "═══ COMPORTAMIENTO CONVERSACIONAL ═══\n" +
-            "- Si el usuario te da info incompleta, USA 'ai_message' para preguntar lo que falta DE FORMA NATURAL.\n" +
-            "- Prioridad de preguntas: Nombre → Cargo → Experiencia → Educación → Skills.\n" +
-            "- Si el usuario da TODO de golpe, procesa todo y en 'ai_message' felicítalo y sugiere mejoras específicas.\n" +
-            "- Sé cálido pero profesional. Tutéalo.\n\n" +
+            "═══ COMPORTAMIENTO CONVERSACIONAL (ESTRICTO) ═══\n" +
+            "- Eres un CONSULTOR DE CARRERA, no solo un procesador de texto. Tu meta es el 100% de completitud.\n" +
+            "- NUNCA digas simplemente 'CV actualizado' y te detengas.\n" +
+            "- Analiza el JSON del 'CV ACTUAL DEL USUARIO'. Si detectas secciones vacías (ej. no hay educación, no hay idiomas, o la descripción de experiencia es muy corta), DEBES mencionarlo.\n" +
+            "- Al final de cada respuesta, haz una pregunta específica sobre lo que falta. Ejemplo: 'He pulido tu experiencia en X, pero veo que la sección de Educación está vacía. ¿En qué universidad estudiaste?'\n" +
+            "- Si el usuario da información vaga, presiónalo amablemente para obtener detalles cuantificables (números, porcentajes, herramientas específicas).\n" +
+            "- Sé cálido pero firme: 'Julian, para que este CV destaque ante un reclutador, necesitamos detallar tus logros en la empresa Y. ¿Qué metas alcanzaste allí?'\n\n" +
             "═══ FORMATO DE RESPUESTA ═══\n" +
             "Responde SOLO con JSON válido (sin markdown, sin ```). Estructura:\n" +
             "{ \"personalInfo\": {\"name\":\"\",\"title\":\"\",\"phone\":\"\",\"email\":\"\",\"address\":\"\",\"website\":\"\",\"aboutMe\":\"\"}, " +
@@ -39,10 +41,9 @@ public class PromptBuilder {
             "\"ai_message\": \"Tu respuesta aquí\" }\n\n" +
             "═══ CV ACTUAL DEL USUARIO ═══\n" + currentStateStr + "\n\n" +
             "═══ REGLA CRÍTICA DE ACTUALIZACIÓN ═══\n" +
-            "- Si el usuario DECLARA SU PROFESIÓN o DICE QUIÉN ES por primera vez, REEMPLAZA TODO el contenido del CV con datos relevantes para esa profesión.\n" +
-            "- Genera habilidades, experiencia y educación coherentes con la profesión declarada. NO conserves datos de otra profesión.\n" +
-            "- Si el usuario AÑADE información extra a un CV que ya tiene sus datos reales (no placeholders), entonces sí: conserva lo existente y agrega lo nuevo.\n" +
-            "- Ejemplo: Si el CV dice 'React, Spring Boot' pero el usuario dice 'soy arquitecto', BORRA las skills de programación y pon 'AutoCAD, Revit, Diseño Estructural', etc.";
+            "- Si el usuario DECLARA SU PROFESIÓN por primera vez, REEMPLAZA el contenido genérico con datos relevantes para esa profesión.\n" +
+            "- Si el usuario AÑADE información extra, CONSERVA lo existente y agrega lo nuevo.\n" +
+            "- IMPORTANTE: Si el CV ya tiene datos reales, NO los borres a menos que el usuario lo pida explícitamente.";
     }
 
     public String buildStyleAnalysisPrompt(String styleDescription) {
