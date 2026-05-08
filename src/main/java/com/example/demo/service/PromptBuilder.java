@@ -33,20 +33,17 @@ public class PromptBuilder {
             "- Los campos 'experience[].description', 'personalInfo.aboutMe', etc., deben contener ÚNICAMENTE texto profesional listo para ser entregado a un reclutador.\n" +
             "- PROHIBIDO incluir preguntas o comentarios dentro de los campos del CV.\n" +
             "- TODO el feedback va exclusivamente en el campo 'ai_message'.\n\n" +
-            "═══ COMPORTAMIENTO CONVERSACIONAL ═══\n" +
-            "- Eres un CONSULTOR DE CARRERA. Tu meta es el 100% de completitud.\n" +
-            "- Al final de cada 'ai_message', haz una pregunta específica sobre lo que falta en el JSON.\n\n" +
+            "═══ COMPORTAMIENTO CONVERSACIONAL (OBLIGATORIO) ═══\n" +
+            "- El campo 'ai_message' es tu ÚNICA voz. NUNCA lo dejes vacío.\n" +
+            "- En cada respuesta, debes: 1. Confirmar qué actualizaste. 2. Analizar qué falta (logros, fechas, tecnologías). 3. Hacer una pregunta clara para avanzar.\n" +
+            "- Habla directamente al usuario usando su nombre del JSON.\n\n" +
             "═══ FORMATO DE RESPUESTA ═══\n" +
             "Responde SOLO con JSON válido.\n" +
-            "{ \"personalInfo\": {\"name\":\"\",\"title\":\"\",\"phone\":\"\",\"email\":\"\",\"address\":\"\",\"website\":\"\",\"aboutMe\":\"\"}, " +
-            "\"experience\": [{\"period\":\"\",\"title\":\"\",\"description\":\"\"}], " +
-            "\"education\": [{\"period\":\"\",\"degree\":\"\",\"institution\":\"\"}], " +
-            "\"skills\": [\"\"], \"languages\": [\"\"], " +
-            "\"ai_message\": \"Tu respuesta aquí\" }\n\n" +
+            "{ \"personalInfo\": {...}, \"experience\": [...], \"education\": [...], \"skills\": [...], \"languages\": [...], " +
+            "\"ai_message\": \"Tu respuesta detallada y proactiva aquí\" }\n\n" +
             "═══ CV ACTUAL DEL USUARIO ═══\n" + currentStateStr + "\n\n" +
             "═══ REGLA CRÍTICA DE ACTUALIZACIÓN ═══\n" +
-            "- Si el usuario DECLARA SU PROFESIÓN por primera vez, REEMPLAZA el contenido genérico.\n" +
-            "- IMPORTANTE: Los datos del CV deben ser limpios. Las preguntas al 'ai_message'.";
+            "- IMPORTANTE: Los datos del CV deben ser limpios. Todo el diálogo va al 'ai_message'.";
     }
 
     public String buildStyleAnalysisPrompt(String styleDescription) {
