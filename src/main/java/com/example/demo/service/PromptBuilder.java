@@ -25,25 +25,15 @@ public class PromptBuilder {
             "8. education[].institution → Nombre completo de la universidad/instituto.\n" +
             "9. skills → Extrae habilidades técnicas y blandas. Si dice 'sé usar Excel', pon 'Microsoft Excel (Avanzado)'. Si dice 'programo en Java', pon 'Java'.\n" +
             "10. languages → Formato: 'Idioma (Nivel)'. Ejemplo: 'Inglés (B2)', 'Español (Nativo)'.\n\n" +
-            "═══ REGLA DE IDENTIDAD (CRÍTICA) ═══\n" +
-            "- Tu nombre para el usuario debe ser ÚNICAMENTE el que aparezca en el campo 'personalInfo.name' del 'CV ACTUAL DEL USUARIO'.\n" +
-            "- Si el nombre en el JSON es 'Edwin', llámalo Edwin. Si es 'Santiago', llámalo Santiago.\n" +
-            "- PROHIBIDO usar el nombre 'Julian' u otros nombres si no están en el JSON actual. No asumas identidades de ejemplos previos.\n\n" +
-            "═══ REGLA DE ORO DE CONTENIDO ═══\n" +
-            "- Los campos 'experience[].description', 'personalInfo.aboutMe', etc., deben contener ÚNICAMENTE texto profesional listo para ser entregado a un reclutador.\n" +
-            "- PROHIBIDO incluir preguntas o comentarios dentro de los campos del CV.\n" +
-            "- TODO el feedback va exclusivamente en el campo 'ai_message'.\n\n" +
-            "═══ COMPORTAMIENTO CONVERSACIONAL (OBLIGATORIO) ═══\n" +
-            "- El campo 'ai_message' es tu ÚNICA voz. NUNCA lo dejes vacío.\n" +
-            "- En cada respuesta, debes: 1. Confirmar qué actualizaste. 2. Analizar qué falta (logros, fechas, tecnologías). 3. Hacer una pregunta clara para avanzar.\n" +
-            "- Habla directamente al usuario usando su nombre del JSON.\n\n" +
-            "═══ FORMATO DE RESPUESTA ═══\n" +
-            "Responde SOLO con JSON válido.\n" +
-            "{ \"personalInfo\": {...}, \"experience\": [...], \"education\": [...], \"skills\": [...], \"languages\": [...], " +
-            "\"ai_message\": \"Tu respuesta detallada y proactiva aquí\" }\n\n" +
-            "═══ CV ACTUAL DEL USUARIO ═══\n" + currentStateStr + "\n\n" +
-            "═══ REGLA CRÍTICA DE ACTUALIZACIÓN ═══\n" +
-            "- IMPORTANTE: Los datos del CV deben ser limpios. Todo el diálogo va al 'ai_message'.";
+            "═══ INSTRUCCIONES RÁPIDAS ═══\n" +
+            "- Eres un Consultor Proactivo. Tu meta: CV 100% completo.\n" +
+            "- Solo modifica los campos necesarios del JSON.\n" +
+            "- 'ai_message': Respuesta corta, confirma cambio y pregunta qué sigue.\n" +
+            "- Identidad: Usa solo el nombre '" + (currentStateStr.contains("\"name\":\"") ? "del JSON" : "Santiago") + "'.\n" +
+            "- Prohibido: Comentarios fuera de 'ai_message'.\n\n" +
+            "═══ FORMATO ═══\n" +
+            "Responde SOLO JSON válido: { \"personalInfo\":{...}, \"experience\":[...], \"education\":[...], \"skills\":[], \"languages\":[], \"ai_message\":\"\" }\n\n" +
+            "═══ CV ACTUAL ═══\n" + currentStateStr;
     }
 
     public String buildStyleAnalysisPrompt(String styleDescription) {

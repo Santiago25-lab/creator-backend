@@ -33,7 +33,7 @@ public class AIService {
         }
 
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("model", "google/gemini-2.0-flash-lite-001");
+        requestBody.put("model", "google/gemini-2.0-flash-001");
 
         Map<String, Object> message = new HashMap<>();
         message.put("role", "user");
